@@ -51,6 +51,10 @@ else:
             break
         # Make line into all lowercase
         line = line.lower()
+        # Fix 8-27: dash is now interpreted as a space
+        line = re.sub('\-', ' ', line)
+        # Fix 8-27: apostraphe is interpreted as a space
+        line = re.sub('\'', ' ', line)
         # Substitute all non-alphabet characters into empty strings
         line = re.sub('[^ a-z]', '', line)
         # Seperate all strings by whitespace
@@ -72,18 +76,17 @@ else:
                 
 # Write results into file in descending order (greatest to lowest)
 print('> Adding max entries into output file...')
-while True: # Done by 2830 
+while True:
     if len(word_dictionary) > 0:
-        max_key = ''
-        max_value = 0
+        min_key = 'z' # z is greatest in a-z
+        min_value = 0
         for key in word_dictionary:
-            if word_dictionary[key] > max_value:
-                #print('>>Maxkey=%s\tMaxvalue=%d' % (key, word_dictionary[key]))
-                max_key = key
-                max_value = word_dictionary[key]
-        output_file.write('%s\t\t%d\n' % (max_key, max_value))
+            if key < min_key:
+                min_key = key
+                min_value = word_dictionary[min_key]
+        output_file.write('%s\t%d\n' % (min_key, min_value))
         #print('>>inputting %s \t\t %d' % (max_key, max_value))
-        word_dictionary.pop(max_key)
+        word_dictionary.pop(min_key)
     else:
         print('> Finished dictionary.')
         break
